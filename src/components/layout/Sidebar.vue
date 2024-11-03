@@ -9,7 +9,7 @@
         <v-list-item title="Organizers"></v-list-item>
       </router-link>
 
-      <router-link to="events" class="text-cyan">
+      <router-link to="/events" class="text-cyan">
         <v-list-item title="Events"></v-list-item>
       </router-link>
 

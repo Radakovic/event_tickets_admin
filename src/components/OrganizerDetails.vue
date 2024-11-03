@@ -1,92 +1,91 @@
 <script setup lang="ts">
-    import {ref, onMounted} from 'vue';
-    import axios from "axios";
+    import { defineProps, onMounted, ref } from 'vue';
+    import axios from 'axios';
 
-    interface OrganizerInterface {
+    interface EventInterface {
         id: string;
         name: string;
         city: string;
         address: string;
-        link: string;
+        country: string;
+        date: any; // Specify a more precise type if possible
+        description: string;
+        passed: boolean;
+        type: string;
     }
 
-    const organizers = ref<OrganizerInterface[]>([])
+    interface OrganizerInterface {
+        id: string;
+        name: string;
+        events: EventInterface[];
+    }
 
-    const search = ref<string>('')
+    // Initialize organizer as a ref with a default value of null
+    const organizer = ref<OrganizerInterface | null>(null);
+    const events = ref<EventInterface[]>([]);
+    const search = ref<string>('');
 
+    // Define table headers
     const headers = [
         { title: 'Name', key: 'name', sortable: true },
+        { title: 'Type', key: 'type', sortable: true },
         { title: 'City', key: 'city', sortable: true },
         { title: 'Address', key: 'address', sortable: true },
+        { title: 'Country', key: 'country', sortable: true },
+        { title: 'Date', key: 'date', sortable: true },
+        { title: 'Description', key: 'description', sortable: true },
         { title: 'Actions', key: 'actions', sortable: false },
-    ]
+    ];
+
+
+    const { id } = defineProps<{ id: string }>();
 
     onMounted(() => {
-        axios.get('/organizers')
+        axios.get(`/organizers/${id}`)
             .then(response => parseResponse(response.data))
             .catch(error => {
                 console.error('Error fetching organizers:', error);
             });
-    })
+    });
 
     function parseResponse(data: any) {
-        for (let item of data.member) {
-            let organizer = {
-                id: item.id,
-                address: item.address,
-                city: item.city,
-                name: item.name,
-                link: '/organizers/' + item.id
+        console.log(data)
+        if (data && data.id && data.name) {
+            organizer.value = {
+                id: data.id,
+                name: data.name,
+                events: [],
+            };
+
+            for (let item of data.events) {
+                let passed: boolean = Date.parse(new Date().toString()) > Date.parse(item.date);
+                let event: EventInterface = {
+                    id: item.id,
+                    address: item.address,
+                    city: item.city,
+                    country: item.country,
+                    date: item.date,
+                    description: item.description,
+                    name: item.name,
+                    type: item.type,
+                    passed: passed
+                };
+                events.value.push(event);
             }
-            organizers.value.push(organizer)
+
+            organizer.value.events = events.value;
+        } else {
+            console.error('Invalid data received:', data);
         }
     }
-
-    function navigateToLink(link: string) {
-        window.location.href = link;
-    }
-
-    function editItem(item: OrganizerInterface) {
-        console.log(item.id);
-    }
-
-    function deleteItem(item: OrganizerInterface) {
-        axios.delete('/organizers/' + item.id)
-            .then(response => console.log(response.data))
-            .catch(error => {
-                console.error('Error fetching organizers:', error);
-            });
-        console.log(item.id);
-    }
-// export default defineComponent({
-//   name: 'OrganizersView',
-//   mounted() {
-//     axios.get('events')
-//         .then(response => console.log(response.data))
-//     // axios.post('/organizers', {
-//     //   name: 'Fred',
-//     //   city: 'Flintstone',
-//     //   address: 'Mite Balije 8',
-//     //   manager: '/api/users/168c2f5a-e6b5-4a16-b27b-ec360f04c5c6'
-//     // })
-//     //     .then(function (response) {
-//     //       console.log(response);
-//     //     })
-//     //     .catch(function (error) {
-//     //       console.log(error);
-//     //     });
-//   },
-//   methods: {
-//     goToAbout() {
-//       this.$router.push('/about')
-//     },
-//   },
 </script>
 
 <template>
-    <v-data-table
+    <p v-if="!organizer">Loading organizer data...</p>
+
+    <v-data-table v-else
         :headers="headers"
-        :items="organizers"
+        :items="organizer.events"
         :search="search"
         class="elevation-1"
     >
@@ -94,7 +93,7 @@
             <v-toolbar
                 flat
             >
-                <v-toolbar-title class="text-amber">Organizers</v-toolbar-title>
+                <v-toolbar-title class="text-amber">{{organizer.name}}</v-toolbar-title>
                 <v-divider
                     class="mx-4"
                     inset
@@ -134,16 +133,23 @@
                 </v-dialog>
             </v-toolbar>
         </template>
+
+
+
         <template v-slot:item="{ item }">
             <tr>
-<!--                <td @click="navigateToLink(item.link)" style="cursor: pointer;" class="text-cyan">{{ item.name }}</td>-->
+                <!--                <td @click="navigateToLink(item.link)" style="cursor: pointer;" class="text-cyan">{{ item.name }}</td>-->
                 <td>
                     <router-link :to="{ name: '/organizer/[id]', params: { id: item.id } }" class="text-cyan">
                         {{ item.name }}
                     </router-link>
                 </td>
+                <td>{{ item.type }}</td>
                 <td>{{ item.city }}</td>
                 <td>{{ item.address }}</td>
+                <td>{{ item.country }}</td>
+                <td>{{ item.date }}</td>
+                <td>{{ item.description }}</td>
                 <td>
                     <v-icon
                         class="me-2 text-cyan"
@@ -163,6 +169,7 @@
             </tr>
         </template>
     </v-data-table>
+
 </template>
 
 <style scoped lang="sass">

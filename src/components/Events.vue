@@ -86,7 +86,7 @@
             <v-toolbar
                 flat
             >
-                <v-toolbar-title>Events</v-toolbar-title>
+                <v-toolbar-title class="text-amber">Events</v-toolbar-title>
                 <v-divider
                     class="mx-4"
                     inset
