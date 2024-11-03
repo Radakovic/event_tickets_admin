@@ -1,93 +1,93 @@
 <script setup lang="ts">
-    import { defineProps, onMounted, ref } from 'vue';
-    import axios from 'axios';
+import { defineProps, onMounted, ref } from 'vue';
+import axios from 'axios';
 
-    interface EventInterface {
-        id: string;
-        name: string;
-        city: string;
-        address: string;
-        country: string;
-        date: any; // Specify a more precise type if possible
-        description: string;
-        passed: boolean;
-        type: string;
-    }
+const { id } = defineProps<{ id: string }>();
 
-    interface OrganizerInterface {
-        id: string;
-        name: string;
-        events: EventInterface[];
-    }
+interface EventInterface {
+    id: string;
+    name: string;
+    city: string;
+    address: string;
+    country: string;
+    date: any; // Specify a more precise type if possible
+    description: string;
+    passed: boolean;
+    type: string;
+}
 
-    // Initialize organizer as a ref with a default value of null
-    const organizer = ref<OrganizerInterface | null>(null);
-    const events = ref<EventInterface[]>([]);
-    const search = ref<string>('');
+interface OrganizerInterface {
+    id: string;
+    name: string;
+    events: EventInterface[];
+}
 
-    // Define table headers
-    const headers = [
-        { title: 'Name', key: 'name', sortable: true },
-        { title: 'Type', key: 'type', sortable: true },
-        { title: 'City', key: 'city', sortable: true },
-        { title: 'Address', key: 'address', sortable: true },
-        { title: 'Country', key: 'country', sortable: true },
-        { title: 'Date', key: 'date', sortable: true },
-        { title: 'Description', key: 'description', sortable: true },
-        { title: 'Actions', key: 'actions', sortable: false },
-    ];
+// Initialize organizer as a ref with a default value of null
+const organizer = ref<OrganizerInterface | null>(null);
+const events = ref<EventInterface[]>([]);
+const search = ref<string>('');
 
+// Define table headers
+const headers = [
+    { title: 'Name', key: 'name', sortable: true },
+    { title: 'Type', key: 'type', sortable: true },
+    { title: 'City', key: 'city', sortable: true },
+    { title: 'Address', key: 'address', sortable: true },
+    { title: 'Country', key: 'country', sortable: true },
+    { title: 'Date', key: 'date', sortable: true },
+    { title: 'Description', key: 'description', sortable: true },
+    { title: 'Actions', key: 'actions', sortable: false },
+];
 
-    const { id } = defineProps<{ id: string }>();
+onMounted(() => {
+    axios.get(`/organizers/${id}`)
+        .then(response => parseResponse(response.data))
+        .catch(error => {
+            console.error('Error fetching organizers:', error);
+        });
+});
 
-    onMounted(() => {
-        axios.get(`/organizers/${id}`)
-            .then(response => parseResponse(response.data))
-            .catch(error => {
-                console.error('Error fetching organizers:', error);
-            });
-    });
+function parseResponse(data: any) {
+    console.log(data)
+    if (data && data.id && data.name) {
+        organizer.value = {
+            id: data.id,
+            name: data.name,
+            events: [],
+        };
 
-    function parseResponse(data: any) {
-        console.log(data)
-        if (data && data.id && data.name) {
-            organizer.value = {
-                id: data.id,
-                name: data.name,
-                events: [],
+        for (let item of data.events) {
+            let passed: boolean = Date.parse(new Date().toString()) > Date.parse(item.date);
+            let event: EventInterface = {
+                id: item.id,
+                address: item.address,
+                city: item.city,
+                country: item.country,
+                date: item.date,
+                description: item.description,
+                name: item.name,
+                type: item.type,
+                passed: passed
             };
-
-            for (let item of data.events) {
-                let passed: boolean = Date.parse(new Date().toString()) > Date.parse(item.date);
-                let event: EventInterface = {
-                    id: item.id,
-                    address: item.address,
-                    city: item.city,
-                    country: item.country,
-                    date: item.date,
-                    description: item.description,
-                    name: item.name,
-                    type: item.type,
-                    passed: passed
-                };
-                events.value.push(event);
-            }
-
-            organizer.value.events = events.value;
-        } else {
-            console.error('Invalid data received:', data);
+            events.value.push(event);
         }
+
+        organizer.value.events = events.value;
+    } else {
+        console.error('Invalid data received:', data);
     }
+}
+
 </script>
 
 <template>
     <p v-if="!organizer">Loading organizer data...</p>
 
     <v-data-table v-else
-        :headers="headers"
-        :items="organizer.events"
-        :search="search"
-        class="elevation-1"
+                  :headers="headers"
+                  :items="organizer.events"
+                  :search="search"
+                  class="elevation-1"
     >
         <template v-slot:top>
             <v-toolbar
@@ -138,9 +138,8 @@
 
         <template v-slot:item="{ item }">
             <tr>
-                <!--                <td @click="navigateToLink(item.link)" style="cursor: pointer;" class="text-cyan">{{ item.name }}</td>-->
                 <td>
-                    <router-link :to="{ name: '/events/[id]', params: { id: item.id } }" class="text-cyan">
+                    <router-link :to="{ name: 'event-details', params: { id: item.id } }" class="text-cyan">
                         {{ item.name }}
                     </router-link>
                 </td>

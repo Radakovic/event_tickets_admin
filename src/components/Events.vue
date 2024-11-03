@@ -165,7 +165,12 @@ import {ref} from 'vue';
 
         <template v-slot:item="{ item }">
             <tr>
-                <td @click="navigateToLink(item.link)" style="cursor: pointer;" class="text-cyan">{{ item.name }}</td>
+<!--                <td @click="navigateToLink(item.link)" style="cursor: pointer;" class="text-cyan">{{ item.name }}</td>-->
+                <td>
+                    <router-link :to="{ name: 'event-details', params: { id: item.id } }" class="text-cyan">
+                        {{ item.name }}
+                    </router-link>
+                </td>
                 <td>{{ item.city }}</td>
                 <td>{{ item.address }}</td>
                 <td>{{ item.country }}</td>
