@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {ref, onMounted, computed} from 'vue';
+import {ref} from 'vue';
     import axios from "axios";
     import moment from "moment"
 
@@ -49,13 +49,11 @@ import {ref, onMounted, computed} from 'vue';
         const searchBy: string = options.search || search.value;
         const sortedBy: object = options.sortBy[0] || {};
 
-        console.log(Object.values(sortedBy));
-
         url.value += `?page=${page}&itemsPerPage=${itemsPerPageValue}`;
 
         // disable pagination and return all items
         if (itemsPerPageValue === -1) {
-            url.value += `?pagination=false`;
+            url.value = `/events?pagination=false`;
         }
 
         // add query param for searching by name
@@ -73,25 +71,8 @@ import {ref, onMounted, computed} from 'vue';
                 console.error('Error fetching organizers:', error);
             });
     };
-
-    // onMounted(() => {
-    //     loadItems({ page: 1, itemsPerPage: itemsPerPage.value });
-    // });
-
-
-    // onMounted(() => {
-    //     axios.get('/events')
-    //         .then(response => parseResponse(response.data))
-    //         .catch(error => {
-    //             console.error('Error fetching organizers:', error);
-    //         });
-    // })
-
-    // const pageCount = computed(() => {
-    //     return Math.ceil(events.value.length / itemsPerPage.value);
-    // });
-
     function parseResponse(data: any) {
+        events.value = [];
         for (let item of data.member) {
             let date = moment(item.date).format('MMMM Do YYYY, HH:mm');
             let passed: boolean = Date.parse(new Date().toString()) > Date.parse(item.date);
@@ -125,49 +106,6 @@ import {ref, onMounted, computed} from 'vue';
 </script>
 
 <template>
-
-<!--    <div v-for="event in events" :key="event.id">-->
-<!--        <p>{{ event.name }}</p>-->
-<!--        <p>{{ event.city }}</p>-->
-<!--    </div>-->
-
-
-<!--    <template>-->
-<!--        <v-data-table-server-->
-<!--            :headers="headers"-->
-<!--            :items="events"-->
-<!--            :items-length="totalItems"-->
-<!--            :loading="loading"-->
-<!--            :search="search"-->
-<!--            item-value="name"-->
-<!--            @update:options="loadItems"-->
-<!--        >-->
-<!--            &lt;!&ndash; Slot content (e.g., for actions) if needed &ndash;&gt;-->
-<!--        </v-data-table-server>-->
-<!--    </template>-->
-
-
-
-    <!--            <template v-slot:tfoot>-->
-    <!--                <tr>-->
-    <!--                    <td>-->
-    <!--                        <v-text-field v-model="name" class="ma-2" density="compact" placeholder="Search name..." hide-details></v-text-field>-->
-    <!--                    </td>-->
-    <!--                </tr>-->
-    <!--            </template>-->
-
-
-
-
-
-<!--    <v-data-table-->
-<!--        :headers="headers"-->
-<!--        :items="events"-->
-<!--        :search="search"-->
-<!--        :itemsPerPage="itemsPerPage"-->
-<!--        :page="page"-->
-<!--        class="elevation-1"-->
-<!--    >-->
     <v-data-table-server
         v-model:items-per-page="itemsPerPage"
         :headers="headers"
@@ -177,7 +115,6 @@ import {ref, onMounted, computed} from 'vue';
         :loading="loading"
         :page="page"
         :hover=true
-        item-value="name"
         @update:options="loadItems"
         class="elevation-1"
     >
@@ -254,15 +191,6 @@ import {ref, onMounted, computed} from 'vue';
                 </td>
             </tr>
         </template>
-
-<!--        <template v-slot:bottom>-->
-<!--            <div class="text-center pt-2">-->
-<!--                <v-pagination-->
-<!--                    v-model="page"-->
-<!--                    :length="pageCount"-->
-<!--                ></v-pagination>-->
-<!--            </div>-->
-<!--        </template>-->
     </v-data-table-server>
 </template>
 
