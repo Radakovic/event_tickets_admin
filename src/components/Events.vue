@@ -1,6 +1,7 @@
 <script setup lang="ts">
     import {ref, onMounted} from 'vue';
     import axios from "axios";
+    import moment from "moment"
 
     interface EventInterface {
         id: string;
@@ -11,9 +12,11 @@
         date: any;
         description: string;
         link: string;
+        passed: boolean;
     }
 
     const events = ref<EventInterface[]>([])
+
     const headers = [
         { title: 'Name', key: 'name', sortable: true },
         { title: 'City', key: 'city', sortable: true },
@@ -22,6 +25,8 @@
         { title: 'Date', key: 'date', sortable: true },
         { title: 'Actions', key: 'actions', sortable: false },
     ]
+
+    const search = ref()
 
     onMounted(() => {
         axios.get('/events')
@@ -34,8 +39,8 @@
 
     function parseResponse(data: any) {
         for (let item of data.member) {
-            console.log(new Date(Date.parse(item.date)).toUTCString());
-            let date = new Date(Date.parse(item.date)).toUTCString();
+            let date = moment(item.date).format('MMMM Do YYYY, HH:mm');
+            let passed: boolean = Date.parse(new Date().toString()) > Date.parse(item.date);
             let event = {
                 id: item.id,
                 address: item.address,
@@ -44,7 +49,8 @@
                 country: item.country,
                 date: date,
                 description: item.description,
-                link: '/events/' + item.id
+                link: '/events/' + item.id,
+                passed: passed
             }
             events.value.push(event)
         }
@@ -67,6 +73,7 @@
     <v-data-table
         :headers="headers"
         :items="events"
+        :search="search"
         class="elevation-1"
     >
         <template v-slot:top>
@@ -74,6 +81,19 @@
                 flat
             >
                 <v-toolbar-title>Events</v-toolbar-title>
+                <v-divider
+                    class="mx-4"
+                    inset
+                    vertical
+                ></v-divider>
+                <v-text-field
+                    v-model="search"
+                    label="Search"
+                    prepend-inner-icon="mdi-magnify"
+                    variant="outlined"
+                    hide-details
+                    single-line
+                ></v-text-field>
                 <v-divider
                     class="mx-4"
                     inset
@@ -100,6 +120,7 @@
                 </v-dialog>
             </v-toolbar>
         </template>
+
         <template v-slot:item="{ item }">
             <tr>
                 <td @click="navigateToLink(item.link)" style="cursor: pointer;" class="text-cyan">{{ item.name }}</td>
@@ -107,7 +128,7 @@
                 <td>{{ item.address }}</td>
                 <td>{{ item.country }}</td>
                 <td>{{ item.date }}</td>
-                <td>
+                <td v-if="!item.passed">
                     <v-icon
                         class="me-2 text-cyan"
                         size="small"
@@ -122,6 +143,9 @@
                     >
                         mdi-delete
                     </v-icon>
+                </td>
+                <td  v-else>
+                    PASSED
                 </td>
             </tr>
         </template>
