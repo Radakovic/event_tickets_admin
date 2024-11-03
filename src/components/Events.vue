@@ -15,18 +15,24 @@
         passed: boolean;
     }
 
+    interface HeaderInterface {
+        title: string;
+        key: string;
+        sortable: boolean;
+    }
+
     const events = ref<EventInterface[]>([])
 
-    const headers = [
+    const headers = ref<HeaderInterface[]>([
         { title: 'Name', key: 'name', sortable: true },
         { title: 'City', key: 'city', sortable: true },
         { title: 'Address', key: 'address', sortable: true },
         { title: 'Country', key: 'country', sortable: true },
         { title: 'Date', key: 'date', sortable: true },
         { title: 'Actions', key: 'actions', sortable: false },
-    ]
+    ])
 
-    const search = ref()
+    const search = ref<string>('')
 
     onMounted(() => {
         axios.get('/events')
