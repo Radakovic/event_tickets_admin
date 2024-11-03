@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import {ref, onMounted} from 'vue';
+import {ref, onMounted, computed} from 'vue';
     import axios from "axios";
     import moment from "moment"
 
@@ -24,24 +24,72 @@
     const events = ref<EventInterface[]>([])
 
     const headers = ref<HeaderInterface[]>([
-        { title: 'Name', key: 'name', sortable: true },
-        { title: 'City', key: 'city', sortable: true },
-        { title: 'Address', key: 'address', sortable: true },
-        { title: 'Country', key: 'country', sortable: true },
+        { title: 'Name', key: 'name', sortable: false },
+        { title: 'City', key: 'city', sortable: false },
+        { title: 'Address', key: 'address', sortable: false },
+        { title: 'Country', key: 'country', sortable: false },
         { title: 'Date', key: 'date', sortable: true },
         { title: 'Actions', key: 'actions', sortable: false },
     ])
 
     const search = ref<string>('')
+    const page = ref<number>(1)
+    const itemsPerPage = ref<number>(10)
+    const totalItems = ref<number>(10)
+    const loading = ref<boolean>(true)
+    const name = ref<string>('')
 
-    onMounted(() => {
-        axios.get('/events')
+
+    const loadItems = (options: { page?: number; itemsPerPage?: number; search?: string, sortBy?: object }) => {
+        totalItems.value = 0;
+        const url = ref<string>(`/events`)
+
+        const page: number = options.page || 1;
+        const itemsPerPageValue: number = options.itemsPerPage || itemsPerPage.value;
+        const searchBy: string = options.search || search.value;
+        const sortedBy: object = options.sortBy[0] || {};
+
+        console.log(Object.values(sortedBy));
+
+        url.value += `?page=${page}&itemsPerPage=${itemsPerPageValue}`;
+
+        // disable pagination and return all items
+        if (itemsPerPageValue === -1) {
+            url.value += `?pagination=false`;
+        }
+
+        // add query param for searching by name
+        if (searchBy !== '') {
+            url.value += `&name=${searchBy}`;
+        }
+
+        if (Object.keys(sortedBy).length > 0) {
+            url.value += `&order[${Object.values(sortedBy)[0]}]=${Object.values(sortedBy)[1]}`;
+        }
+
+        axios.get(url.value)
             .then(response => parseResponse(response.data))
             .catch(error => {
                 console.error('Error fetching organizers:', error);
             });
-    })
+    };
 
+    // onMounted(() => {
+    //     loadItems({ page: 1, itemsPerPage: itemsPerPage.value });
+    // });
+
+
+    // onMounted(() => {
+    //     axios.get('/events')
+    //         .then(response => parseResponse(response.data))
+    //         .catch(error => {
+    //             console.error('Error fetching organizers:', error);
+    //         });
+    // })
+
+    // const pageCount = computed(() => {
+    //     return Math.ceil(events.value.length / itemsPerPage.value);
+    // });
 
     function parseResponse(data: any) {
         for (let item of data.member) {
@@ -60,6 +108,7 @@
             }
             events.value.push(event)
         }
+        loading.value = false
     }
 
     function navigateToLink(link: string) {
@@ -76,10 +125,60 @@
 </script>
 
 <template>
-    <v-data-table
+
+<!--    <div v-for="event in events" :key="event.id">-->
+<!--        <p>{{ event.name }}</p>-->
+<!--        <p>{{ event.city }}</p>-->
+<!--    </div>-->
+
+
+<!--    <template>-->
+<!--        <v-data-table-server-->
+<!--            :headers="headers"-->
+<!--            :items="events"-->
+<!--            :items-length="totalItems"-->
+<!--            :loading="loading"-->
+<!--            :search="search"-->
+<!--            item-value="name"-->
+<!--            @update:options="loadItems"-->
+<!--        >-->
+<!--            &lt;!&ndash; Slot content (e.g., for actions) if needed &ndash;&gt;-->
+<!--        </v-data-table-server>-->
+<!--    </template>-->
+
+
+
+    <!--            <template v-slot:tfoot>-->
+    <!--                <tr>-->
+    <!--                    <td>-->
+    <!--                        <v-text-field v-model="name" class="ma-2" density="compact" placeholder="Search name..." hide-details></v-text-field>-->
+    <!--                    </td>-->
+    <!--                </tr>-->
+    <!--            </template>-->
+
+
+
+
+
+<!--    <v-data-table-->
+<!--        :headers="headers"-->
+<!--        :items="events"-->
+<!--        :search="search"-->
+<!--        :itemsPerPage="itemsPerPage"-->
+<!--        :page="page"-->
+<!--        class="elevation-1"-->
+<!--    >-->
+    <v-data-table-server
+        v-model:items-per-page="itemsPerPage"
         :headers="headers"
         :items="events"
         :search="search"
+        :items-length="totalItems"
+        :loading="loading"
+        :page="page"
+        :hover=true
+        item-value="name"
+        @update:options="loadItems"
         class="elevation-1"
     >
         <template v-slot:top>
@@ -94,7 +193,7 @@
                 ></v-divider>
                 <v-text-field
                     v-model="search"
-                    label="Search"
+                    label="Search by name"
                     prepend-inner-icon="mdi-magnify"
                     variant="outlined"
                     hide-details
@@ -155,7 +254,16 @@
                 </td>
             </tr>
         </template>
-    </v-data-table>
+
+<!--        <template v-slot:bottom>-->
+<!--            <div class="text-center pt-2">-->
+<!--                <v-pagination-->
+<!--                    v-model="page"-->
+<!--                    :length="pageCount"-->
+<!--                ></v-pagination>-->
+<!--            </div>-->
+<!--        </template>-->
+    </v-data-table-server>
 </template>
 
 <style scoped lang="sass">

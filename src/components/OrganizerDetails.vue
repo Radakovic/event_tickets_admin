@@ -140,7 +140,7 @@
             <tr>
                 <!--                <td @click="navigateToLink(item.link)" style="cursor: pointer;" class="text-cyan">{{ item.name }}</td>-->
                 <td>
-                    <router-link :to="{ name: '/organizer/[id]', params: { id: item.id } }" class="text-cyan">
+                    <router-link :to="{ name: '/events/[id]', params: { id: item.id } }" class="text-cyan">
                         {{ item.name }}
                     </router-link>
                 </td>
