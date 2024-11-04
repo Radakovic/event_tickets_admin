@@ -8,6 +8,7 @@ import OrganizerEdit from "@/pages/organizers/[id]-edit.vue";
 import OrganizerCreate from "@/pages/organizers/create.vue";
 import EventCreate from "@/pages/events/create.vue";
 import TicketCreate from "@/pages/tickets/create.vue";
+import TicketEdit from "@/pages/tickets/[id]-edit.vue";
 
 const routes = [
   {
@@ -54,6 +55,11 @@ const routes = [
     path: '/tickets',
     name: 'ticket-create',
     component: TicketCreate,
+  },
+  {
+    path: '/tickets/:id',
+    name: 'ticket-edit',
+    component: TicketEdit,
   }
 ];
 const router = createRouter({

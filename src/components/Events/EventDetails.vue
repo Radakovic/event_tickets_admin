@@ -19,10 +19,6 @@ onMounted(() => {
     store.dispatch('eventDetails/fetchEventDetails', id);
 });
 
-function editTicket(item: TicketInterface) {
-    console.log(item);
-}
-
 function deleteTicket(id: string) {
     store.dispatch('eventDetails/removeTicket', id);
 }
@@ -111,13 +107,14 @@ function deleteTicket(id: string) {
                 <td>${{ item.price }}</td>
                 <td>{{ item.numberAvailableTickets }}</td>
                 <td>
-                    <v-icon
-                        class="me-2 text-cyan"
-                        size="small"
-                        @click="editTicket(item)"
-                    >
-                        mdi-pencil
-                    </v-icon>
+                    <router-link :to="{ name: 'ticket-edit', params: { id: item.id } }" class="text-cyan">
+                        <v-icon
+                            class="me-2 text-cyan"
+                            size="small"
+                        >
+                            mdi-pencil
+                        </v-icon>
+                    </router-link>
                     <v-icon
                         class="me-2 text-red-accent-1"
                         size="small"
