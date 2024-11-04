@@ -3,19 +3,26 @@
 This project is for testing purposes only and is far from complete. The basic idea of project is to just show proof of concept for a future admin application
 
 ## 💿 Install process
-This is link to application repository
-`https://github.com/Radakovic/event_tickets_admin`
+This application can not work without backend project. Please before continuing with installation of this project follow instructions how to set up backend project. 
+Link to backend project with instructions: `https://github.com/Radakovic/event_tickets_api`
+
+
+After successfully installed BE project you can continue with instructions for this project.
+
 In your terminal execute command to get source code of project
 
 `git clone git@github.com:Radakovic/event_tickets_admin.git`
 
 
-Set up your project using your preferred package manager. Use the corresponding command to install the dependencies:
+Set up your project using command to install the dependencies:
 
 | Package Manager                                                | Command        |
 |---------------------------------------------------------------|----------------|
 | [yarn](https://yarnpkg.com/getting-started)                   | `yarn install` |
-| [npm](https://docs.npmjs.com/cli/v7/commands/npm-install)     | `npm install`  |
+
+To start your local server execute
+
+- `yarn dev`
 
 After completing the installation, your dev environment is ready. You can run application on this link:
 
