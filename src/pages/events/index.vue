@@ -1,7 +1,7 @@
 <template>
-    <Events />
+    <Event />
 </template>
 
 <script setup lang="ts">
-import Events from '@/components/Events.vue'
+import Event from '@/components/Events/Event.vue'
 </script>

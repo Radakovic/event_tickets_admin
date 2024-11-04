@@ -5,6 +5,9 @@ import Organizers from "@/pages/organizers/index.vue";
 import OrganizerDetails from "@/pages/organizers/[id].vue";
 import EditEvent from "@/pages/events/[id]-edit.vue";
 import OrganizerEdit from "@/pages/organizers/[id]-edit.vue";
+import OrganizerCreate from "@/pages/organizers/create.vue";
+import EventCreate from "@/pages/events/create.vue";
+import TicketCreate from "@/pages/tickets/create.vue";
 
 const routes = [
   {
@@ -23,6 +26,11 @@ const routes = [
     component: OrganizerEdit,
   },
   {
+    path: '/organizers',
+    name: 'organizer-create',
+    component: OrganizerCreate,
+  },
+  {
     path: '/events',
     name: 'event-list',
     component: Event,
@@ -36,6 +44,16 @@ const routes = [
     path: '/events/:id',
     name: 'event-edit',
     component: EditEvent,
+  },
+  {
+    path: '/events',
+    name: 'event-create',
+    component: EventCreate,
+  },
+  {
+    path: '/tickets',
+    name: 'ticket-create',
+    component: TicketCreate,
   }
 ];
 const router = createRouter({

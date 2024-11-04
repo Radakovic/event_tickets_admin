@@ -160,6 +160,7 @@ import {ref} from 'vue';
                             color="primary"
                             dark
                             v-bind="props"
+                            :to="{ name: 'event-create' }"
                         >
                             New Item
                         </v-btn>

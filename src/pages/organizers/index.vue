@@ -4,5 +4,5 @@
 
 <script setup>
 //
-import Organizers from "@/components/Organizers.vue";
+import Organizers from "@/components/Organizers/Organizer.vue";
 </script>

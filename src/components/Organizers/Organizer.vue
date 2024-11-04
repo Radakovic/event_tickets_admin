@@ -123,6 +123,8 @@
                             color="primary"
                             dark
                             v-bind="props"
+                            :to="{ name: 'organizer-create' }"
+                            transition="false"
                         >
                             New Item
                         </v-btn>

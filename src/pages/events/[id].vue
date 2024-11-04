@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-    import EventDetails from "@/components/EventDetails.vue";
+    import EventDetails from "@/components/Events/EventDetails.vue";
     import { useRoute } from 'vue-router';
 
     const route = useRoute();

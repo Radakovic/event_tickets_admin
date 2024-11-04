@@ -1,10 +1,9 @@
 <script setup>
-// import {ref, onMounted} from 'vue';
-// import axios from "axios";
+
 </script>
 
 <template>
-
+    <h1>Events create new component</h1>
 </template>
 
 <style scoped lang="sass">

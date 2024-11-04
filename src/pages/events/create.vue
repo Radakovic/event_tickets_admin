@@ -1,10 +1,10 @@
 <template>
-    <EventEdit :id="id" />
+    <EventCreate :id="id" />
 </template>
 
 <script setup lang="ts">
-import EventEdit from "@/components/Events/EventEdit.vue";
 import { useRoute } from 'vue-router';
+import EventCreate from "@/components/Events/EventCreate.vue";
 
 const route = useRoute();
 

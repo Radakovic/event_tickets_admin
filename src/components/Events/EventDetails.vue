@@ -157,6 +157,7 @@ function deleteTicket(item: TicketInterface) {
                             color="primary"
                             dark
                             v-bind="props"
+                            :to="{ name: 'ticket-create' }"
                         >
                             New Item
                         </v-btn>

@@ -4,7 +4,7 @@
 
 <script setup lang="ts">
 
-import OrganizerDetails from "@/components/OrganizerDetails.vue";
+import OrganizerDetails from "@/components/Organizers/OrganizerDetails.vue";
 import { useRoute } from 'vue-router';
 
 const route = useRoute();
