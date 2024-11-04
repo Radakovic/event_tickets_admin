@@ -1,82 +1,28 @@
 <script setup lang="ts">
-    import {ref, onMounted} from 'vue';
-    import axios from "axios";
+import { onMounted, computed, ref } from 'vue';
+import { useStore } from 'vuex';
 
-    interface OrganizerInterface {
-        id: string;
-        name: string;
-        city: string;
-        address: string;
-        link: string;
-    }
+const store = useStore();
 
-    const organizers = ref<OrganizerInterface[]>([])
+onMounted(() => {
+    store.dispatch('organizer/fetchOrganizers');
+});
 
-    const search = ref<string>('')
+const organizers = computed(() => store.getters['organizer/organizers']);
 
-    const headers = [
-        { title: 'Name', key: 'name', sortable: true },
-        { title: 'City', key: 'city', sortable: true },
-        { title: 'Address', key: 'address', sortable: true },
-        { title: 'Actions', key: 'actions', sortable: false },
-    ]
+const search = ref('');
+const headers = ref([
+    { title: 'Name', key: 'name', sortable: true },
+    { title: 'City', key: 'city', sortable: true },
+    { title: 'Address', key: 'address', sortable: true },
+    { title: 'Actions', key: 'actions', sortable: false },
+]);
 
-    onMounted(() => {
-        axios.get('/organizers')
-            .then(response => parseResponse(response.data))
-            .catch(error => {
-                console.error('Error fetching organizers:', error);
-            });
-    })
-
-    function parseResponse(data: any) {
-        for (let item of data.member) {
-            let organizer = {
-                id: item.id,
-                address: item.address,
-                city: item.city,
-                name: item.name,
-                link: '/organizers/' + item.id
-            }
-            organizers.value.push(organizer)
-        }
-    }
-
-    function navigateToLink(link: string) {
-        window.location.href = link;
-    }
-
-    function deleteItem(item: OrganizerInterface) {
-        axios.delete('/organizers/' + item.id)
-            .then(response => console.log(response.data))
-            .catch(error => {
-                console.error('Error fetching organizers:', error);
-            });
-    }
-// export default defineComponent({
-//   name: 'OrganizersView',
-//   mounted() {
-//     axios.get('events')
-//         .then(response => console.log(response.data))
-//     // axios.post('/organizers', {
-//     //   name: 'Fred',
-//     //   city: 'Flintstone',
-//     //   address: 'Mite Balije 8',
-//     //   manager: '/api/users/168c2f5a-e6b5-4a16-b27b-ec360f04c5c6'
-//     // })
-//     //     .then(function (response) {
-//     //       console.log(response);
-//     //     })
-//     //     .catch(function (error) {
-//     //       console.log(error);
-//     //     });
-//   },
-//   methods: {
-//     goToAbout() {
-//       this.$router.push('/about')
-//     },
-//   },
+function removeOrganizer(item) {
+    store.dispatch('organizer/deleteItem', item);
+}
 </script>
+
 
 <template>
     <v-data-table
@@ -110,10 +56,6 @@
                     vertical
                 ></v-divider>
                 <v-spacer></v-spacer>
-                <!--        <v-dialog-->
-                <!--            v-model="dialog"-->
-                <!--            max-width="500px"-->
-                <!--        >-->
                 <v-dialog
                     max-width="500px"
                 >
@@ -134,7 +76,6 @@
         </template>
         <template v-slot:item="{ item }">
             <tr>
-<!--                <td @click="navigateToLink(item.link)" style="cursor: pointer;" class="text-cyan">{{ item.name }}</td>-->
                 <td>
                     <router-link :to="{ name: 'organizer-details', params: { id: item.id } }" class="text-cyan">
                         {{ item.name }}
@@ -154,7 +95,7 @@
                     <v-icon
                         class="me-2 text-red-accent-1"
                         size="small"
-                        @click="deleteItem(item)"
+                        @click="removeOrganizer(item)"
                     >
                         mdi-delete
                     </v-icon>
