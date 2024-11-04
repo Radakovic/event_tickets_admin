@@ -1,92 +1,30 @@
 <script setup lang="ts">
-import { defineProps, onMounted, ref } from 'vue';
-import axios from 'axios';
-import moment from "moment"
+import {computed, defineProps, onMounted, ref} from 'vue';
+import { useStore } from 'vuex';
 
-interface EventInterface {
-    id: string;
-    name: string;
-    city: string;
-    address: string;
-    country: string;
-    date: any;
-    description: string;
-    passed: boolean;
-    type: string;
-    tickets: TicketInterface[]
-}
-
-interface TicketInterface {
-    id: string;
-    price: string;
-    type: string;
-    numberAvailableTickets: number
-}
-
-const event = ref<EventInterface | null>(null);
+const store = useStore()
+const { id } = defineProps<{ id: string }>()
+const event = computed(() => store.getters['eventDetails/event'])
+const tickets = computed(() => store.getters['eventDetails/tickets'])
+const loader = computed(() => store.getters['eventDetails/loader'])
 const search = ref<string>('');
-
-// Define table headers
 const headers = [
     { title: 'Type', key: 'type' },
     { title: 'Price', key: 'price' },
     { title: 'Number of available tickets', key: 'numberAvailableTickets'},
     { title: 'Actions', key: 'actions' },
-];
-
-
-const { id } = defineProps<{ id: string }>();
+]
 
 onMounted(() => {
-    axios.get(`/events/${id}`)
-        .then(response => parseResponse(response.data))
-        .catch(error => {
-            console.error('Error fetching organizers:', error);
-        });
+    store.dispatch('eventDetails/fetchEventDetails', id);
 });
 
-function parseResponse(data: any) {
-    if (data) {
-        const passed: boolean = Date.parse(new Date().toString()) > Date.parse(data.date);
-        const date = moment(data.date).format('MMMM Do YYYY, HH:mm');
-        event.value = {
-            id: data.id,
-            name: data.name,
-            city: data.city,
-            address: data.address,
-            country: data.country,
-            date: date,
-            description: data.description,
-            type: data.type,
-            passed: passed
-        };
-
-        const tickets = []
-        for (let item of data.tickets) {
-            let ticket: TicketInterface = {
-                id: item.id,
-                price: (item.price / 100).toFixed(2),
-                type: item.type,
-                numberAvailableTickets: item.numberAvailableTickets
-            };
-            tickets.push(ticket);
-        }
-        event.value.tickets = tickets;
-    } else {
-        console.error('Invalid data received:', data);
-    }
-}
 function editTicket(item: TicketInterface) {
     console.log(item);
 }
 
-function deleteTicket(item: TicketInterface) {
-    axios.delete('/tickets/' + item.id)
-        .then(response => console.log(response.data))
-        .catch(error => {
-            console.error('Error fetching organizers:', error);
-        });
-    console.log(item)
+function deleteTicket(id: string) {
+    store.dispatch('eventDetails/removeTicket', id);
 }
 </script>
 
@@ -95,9 +33,10 @@ function deleteTicket(item: TicketInterface) {
 
     <v-data-table v-else
       :headers="headers"
-      :items="event.tickets"
+      :items="tickets"
       :search="search"
       :hover=true
+      :loading="loader"
       class="elevation-1"
     >
 
@@ -182,7 +121,7 @@ function deleteTicket(item: TicketInterface) {
                     <v-icon
                         class="me-2 text-red-accent-1"
                         size="small"
-                        @click="deleteTicket(item)"
+                        @click="deleteTicket(item.id)"
                     >
                         mdi-delete
                     </v-icon>

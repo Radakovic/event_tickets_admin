@@ -33,9 +33,9 @@ const onUpdateLoadEvents = (options: { page?: number; itemsPerPage?: number; sea
 function removeEvent(id) {
     store.dispatch('event/removeEvent', id);
 }
+
+
 const events = computed(() => store.getters['event/events']);
-
-
 const headers = ref([
     { title: 'Name', key: 'name', sortable: false },
     { title: 'City', key: 'city', sortable: false },
