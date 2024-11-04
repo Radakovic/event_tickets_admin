@@ -180,13 +180,15 @@ import {ref} from 'vue';
                 <td>{{ item.country }}</td>
                 <td>{{ item.date }}</td>
                 <td v-if="!item.passed">
-                    <v-icon
-                        class="me-2 text-cyan"
-                        size="small"
-                        @click="editEvent(item)"
-                    >
-                        mdi-pencil
-                    </v-icon>
+                    <router-link :to="{ name: 'event-edit', params: { id: item.id } }" class="text-cyan">
+                        <v-icon
+                            class="me-2 text-cyan"
+                            size="small"
+                        >
+                            mdi-pencil
+                        </v-icon>
+                    </router-link>
+
                     <v-icon
                         class="me-2 text-red-accent-1"
                         size="small"

@@ -78,9 +78,6 @@ function parseResponse(data: any) {
         console.error('Invalid data received:', data);
     }
 }
-function editItem(item: EventInterface) {
-    console.log(item);
-}
 
 function deleteItem(item: EventInterface) {
     axios.delete('/events/' + item.id)
@@ -162,15 +159,15 @@ function deleteItem(item: EventInterface) {
                 <td>{{ item.address }}</td>
                 <td>{{ item.country }}</td>
                 <td>{{ item.date }}</td>
-<!--                <td>{{ item.description }}</td>-->
                 <td>
-                    <v-icon
-                        class="me-2 text-cyan"
-                        size="small"
-                        @click="editItem(item)"
-                    >
-                        mdi-pencil
-                    </v-icon>
+                    <router-link :to="{ name: 'event-edit', params: { id: item.id } }" class="text-cyan">
+                        <v-icon
+                            class="me-2 text-cyan"
+                            size="small"
+                        >
+                            mdi-pencil
+                        </v-icon>
+                    </router-link>
                     <v-icon
                         class="me-2 text-red-accent-1"
                         size="small"

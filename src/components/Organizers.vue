@@ -46,10 +46,6 @@
         window.location.href = link;
     }
 
-    function editItem(item: OrganizerInterface) {
-        console.log(item.id);
-    }
-
     function deleteItem(item: OrganizerInterface) {
         axios.delete('/organizers/' + item.id)
             .then(response => console.log(response.data))
@@ -145,13 +141,14 @@
                 <td>{{ item.city }}</td>
                 <td>{{ item.address }}</td>
                 <td>
-                    <v-icon
-                        class="me-2 text-cyan"
-                        size="small"
-                        @click="editItem(item)"
-                    >
-                        mdi-pencil
-                    </v-icon>
+                    <router-link :to="{ name: 'organizer-edit', params: { id: item.id } }" class="text-cyan">
+                        <v-icon
+                            class="me-2 text-cyan"
+                            size="small"
+                        >
+                            mdi-pencil
+                        </v-icon>
+                    </router-link>
                     <v-icon
                         class="me-2 text-red-accent-1"
                         size="small"
