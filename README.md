@@ -31,9 +31,9 @@ After completing the installation, your dev environment is ready. You can run ap
 
 ## ✨ Features
 
-- Home page - List of all `Organizers`. Here you can search organizers, sort them, delete, ...
-- Left sidebar with links to main pages `Organizers` and `Events`
-- On each page there should be possibility to search, sort, delete, links to  add `New Item`, and to `Edit item`
+- List pages for all entities `Organizers`, `Events`, `Tickets`. with link to details pages of `Organizers` and `Events` 
+- Left sidebar with links to main entities `Organizers` and `Events`
+- On each List page there should be possibility to search, sort, delete, links to  add `New Item`, and to `Edit item`
 
 ## 💡 IMPORTANT
 
