@@ -76,12 +76,17 @@ function parseResponse(data: any) {
         console.error('Invalid data received:', data);
     }
 }
-function editEvent(item: EventInterface) {
+function editTicket(item: TicketInterface) {
     console.log(item);
 }
 
-function deleteEvent(item: EventInterface) {
-    console.log(item);
+function deleteTicket(item: TicketInterface) {
+    axios.delete('/tickets/' + item.id)
+        .then(response => console.log(response.data))
+        .catch(error => {
+            console.error('Error fetching organizers:', error);
+        });
+    console.log(item)
 }
 </script>
 
@@ -169,14 +174,14 @@ function deleteEvent(item: EventInterface) {
                     <v-icon
                         class="me-2 text-cyan"
                         size="small"
-                        @click="editItem(item)"
+                        @click="editTicket(item)"
                     >
                         mdi-pencil
                     </v-icon>
                     <v-icon
                         class="me-2 text-red-accent-1"
                         size="small"
-                        @click="deleteItem(item)"
+                        @click="deleteTicket(item)"
                     >
                         mdi-delete
                     </v-icon>

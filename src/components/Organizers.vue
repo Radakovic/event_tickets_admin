@@ -56,7 +56,6 @@
             .catch(error => {
                 console.error('Error fetching organizers:', error);
             });
-        console.log(item.id);
     }
 // export default defineComponent({
 //   name: 'OrganizersView',

@@ -78,18 +78,29 @@ function parseResponse(data: any) {
         console.error('Invalid data received:', data);
     }
 }
+function editItem(item: EventInterface) {
+    console.log(item);
+}
 
+function deleteItem(item: EventInterface) {
+    axios.delete('/events/' + item.id)
+        .then(response => console.log(response.data))
+        .catch(error => {
+            console.error('Error fetching organizers:', error);
+        });
+    console.log(item)
+}
 </script>
 
 <template>
     <p v-if="!organizer">Loading organizer data...</p>
 
     <v-data-table v-else
-                  :headers="headers"
-                  :items="organizer.events"
-                  :search="search"
-                  :hover=true
-                  class="elevation-1"
+      :headers="headers"
+      :items="organizer.events"
+      :search="search"
+      :hover=true
+      class="elevation-1"
     >
 
         <template v-slot:top>

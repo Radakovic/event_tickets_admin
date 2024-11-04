@@ -101,7 +101,12 @@ import {ref} from 'vue';
     }
 
     function deleteEvent(item: EventInterface) {
-        console.log(item);
+        axios.delete('/events/' + item.id)
+            .then(response => console.log(response.data))
+            .catch(error => {
+                console.error('Error fetching organizers:', error);
+            });
+        console.log(item)
     }
 </script>
 
