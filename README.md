@@ -4,6 +4,7 @@ This project is for testing purposes only and is far from complete. The basic id
 
 ## 💿 Install process
 This application can not work without backend project. Please before continuing with installation of this project follow instructions how to set up backend project. 
+
 Link to backend project with instructions: `https://github.com/Radakovic/event_tickets_api`
 
 
