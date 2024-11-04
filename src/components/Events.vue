@@ -165,7 +165,6 @@ import {ref} from 'vue';
 
         <template v-slot:item="{ item }">
             <tr>
-<!--                <td @click="navigateToLink(item.link)" style="cursor: pointer;" class="text-cyan">{{ item.name }}</td>-->
                 <td>
                     <router-link :to="{ name: 'event-details', params: { id: item.id } }" class="text-cyan">
                         {{ item.name }}
@@ -191,7 +190,7 @@ import {ref} from 'vue';
                         mdi-delete
                     </v-icon>
                 </td>
-                <td  v-else>
+                <td v-else class="text-red-darken-1">
                     PASSED
                 </td>
             </tr>

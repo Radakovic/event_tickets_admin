@@ -88,6 +88,7 @@
         :headers="headers"
         :items="organizers"
         :search="search"
+        :hover=true
         class="elevation-1"
     >
         <template v-slot:top>

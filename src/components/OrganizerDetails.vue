@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { defineProps, onMounted, ref } from 'vue';
 import axios from 'axios';
+import moment from "moment/moment";
 
 const { id } = defineProps<{ id: string }>();
 
@@ -35,7 +36,7 @@ const headers = [
     { title: 'Address', key: 'address', sortable: true },
     { title: 'Country', key: 'country', sortable: true },
     { title: 'Date', key: 'date', sortable: true },
-    { title: 'Description', key: 'description', sortable: true },
+    // { title: 'Description', key: 'description', sortable: true },
     { title: 'Actions', key: 'actions', sortable: false },
 ];
 
@@ -48,7 +49,6 @@ onMounted(() => {
 });
 
 function parseResponse(data: any) {
-    console.log(data)
     if (data && data.id && data.name) {
         organizer.value = {
             id: data.id,
@@ -58,12 +58,13 @@ function parseResponse(data: any) {
 
         for (let item of data.events) {
             let passed: boolean = Date.parse(new Date().toString()) > Date.parse(item.date);
+            const date = moment(item.date).format('MMMM Do YYYY, HH:mm');
             let event: EventInterface = {
                 id: item.id,
                 address: item.address,
                 city: item.city,
                 country: item.country,
-                date: item.date,
+                date: date,
                 description: item.description,
                 name: item.name,
                 type: item.type,
@@ -87,8 +88,10 @@ function parseResponse(data: any) {
                   :headers="headers"
                   :items="organizer.events"
                   :search="search"
+                  :hover=true
                   class="elevation-1"
     >
+
         <template v-slot:top>
             <v-toolbar
                 flat
@@ -148,7 +151,7 @@ function parseResponse(data: any) {
                 <td>{{ item.address }}</td>
                 <td>{{ item.country }}</td>
                 <td>{{ item.date }}</td>
-                <td>{{ item.description }}</td>
+<!--                <td>{{ item.description }}</td>-->
                 <td>
                     <v-icon
                         class="me-2 text-cyan"
