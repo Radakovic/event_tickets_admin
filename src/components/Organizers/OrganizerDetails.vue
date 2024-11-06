@@ -6,6 +6,7 @@ const store = useStore();
 const { id } = defineProps<{ id: string }>();
 const organizer = computed(() => store.getters['organizerDetails/organizer']);
 const events = computed(() => store.getters['organizerDetails/events']);
+const manager = computed(() => store.getters['organizerDetails/manager']);
 const loader = computed(() => store.getters['organizerDetails/loader']);
 const search = ref<string>('');
 const headers = [
@@ -38,10 +39,30 @@ function removeEvent(id: string) {
       class="elevation-1"
     >
         <template v-slot:top>
+            <v-container>
+                <v-card>
+                    <v-card-title class="text-overline text-green-darken-3">
+                        <h1>
+                            Organizer: {{organizer.name}}
+                        </h1>
+
+                        <div class="text-medium-emphasis font-weight-regular">
+                            <h2>
+                                Manager: {{manager.firstName}} {{manager.lastName}}
+                            </h2>
+                        </div>
+
+                        <div class="text-medium-emphasis font-weight-regular">
+                            <address>{{manager.email}}</address>
+                        </div>
+                    </v-card-title>
+                </v-card>
+            </v-container>
+
             <v-toolbar
                 flat
             >
-                <v-toolbar-title class="text-amber">{{organizer.name}} - List of events</v-toolbar-title>
+                <v-toolbar-title class="text-amber">List of events</v-toolbar-title>
                 <v-divider
                     class="mx-4"
                     inset

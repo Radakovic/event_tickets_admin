@@ -3,6 +3,7 @@ import moment from "moment/moment";
 
 const state = {
     organizer: {},
+    manager: {},
     events: [],
     loader: true,
 };
@@ -10,6 +11,9 @@ const state = {
 const mutations = {
     SET_ORGANIZER(state, organizer) {
         state.organizer = organizer;
+    },
+    SET_MANAGER(state, manager) {
+        state.manager = manager;
     },
     SET_EVENTS(state, events) {
         state.events = events;
@@ -30,7 +34,17 @@ const actions = {
             const organizer = {
                 id: response.data.id,
                 name: response.data.name,
+                city: response.data.city,
+                address: response.data.address,
             };
+
+            const manager = {
+                firstName: response.data.manager.firstName,
+                lastName: response.data.manager.lastName,
+                email: response.data.manager.email,
+            };
+
+            console.log(manager);
 
             const events = response.data.events.map(event => ({
                 id: event.id,
@@ -45,6 +59,7 @@ const actions = {
             }))
 
             commit('SET_ORGANIZER', organizer);
+            commit('SET_MANAGER', manager);
             commit('SET_EVENTS', events);
             commit('STOP_LOADER');
         } catch (error) {
@@ -64,6 +79,9 @@ const actions = {
 const getters = {
     organizer(state) {
         return state.organizer;
+    },
+    manager(state) {
+        return state.manager
     },
     events(state) {
         return state.events;
