@@ -39,6 +39,6 @@ After completing the installation, your dev environment is ready. You can run ap
 
 Because of short period given for task these features are not finished or maybe not even started
 
-- FORMS does not exist or does not work
+- FORMS only form witch exist and works is for creating new organizer
 - TEST does not exist - im very sad about this, but i simply didn't have time for that
 

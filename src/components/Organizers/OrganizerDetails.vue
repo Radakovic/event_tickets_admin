@@ -91,8 +91,9 @@ function removeEvent(id: string) {
                             color="primary"
                             dark
                             v-bind="props"
+                            :to="{ name: 'event-create' }"
                         >
-                            New Item
+                            Create new event
                         </v-btn>
                     </template>
                 </v-dialog>

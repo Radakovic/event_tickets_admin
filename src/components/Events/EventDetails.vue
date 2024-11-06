@@ -94,7 +94,7 @@ function deleteTicket(id: string) {
                             v-bind="props"
                             :to="{ name: 'ticket-create' }"
                         >
-                            New Item
+                            Add new ticket type
                         </v-btn>
                     </template>
                 </v-dialog>

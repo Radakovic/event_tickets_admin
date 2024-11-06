@@ -68,7 +68,7 @@ function removeOrganizer(item) {
                             :to="{ name: 'organizer-create' }"
                             transition="false"
                         >
-                            New Item
+                            Create new organizer
                         </v-btn>
                     </template>
                 </v-dialog>

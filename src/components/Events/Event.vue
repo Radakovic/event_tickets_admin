@@ -92,17 +92,6 @@ const loader = computed(() => store.getters['event/loader'])
                 <v-dialog
                     max-width="500px"
                 >
-                    <template v-slot:activator="{ props }">
-                        <v-btn
-                            class="mb-2"
-                            color="primary"
-                            dark
-                            v-bind="props"
-                            :to="{ name: 'event-create' }"
-                        >
-                            New Item
-                        </v-btn>
-                    </template>
                 </v-dialog>
             </v-toolbar>
         </template>
