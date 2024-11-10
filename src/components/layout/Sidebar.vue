@@ -5,7 +5,7 @@
 <template>
   <v-navigation-drawer>
     <v-list>
-      <router-link to="/" class="text-cyan">
+      <router-link to="/organizers" class="text-cyan">
         <v-list-item title="Organizers"></v-list-item>
       </router-link>
 

@@ -9,10 +9,16 @@ import OrganizerCreate from "@/pages/organizers/create.vue";
 import EventCreate from "@/pages/events/create.vue";
 import TicketCreate from "@/pages/tickets/create.vue";
 import TicketEdit from "@/pages/tickets/[id]-edit.vue";
+import Login from "@/pages/login/login.vue";
 
 const routes = [
   {
     path: '/',
+    name: 'login',
+    component: Login,
+  },
+  {
+    path: '/organizers',
     name: 'organizer',
     component: Organizers,
   },
