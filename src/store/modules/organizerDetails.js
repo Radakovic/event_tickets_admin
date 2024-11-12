@@ -44,8 +44,6 @@ const actions = {
                 email: response.data.manager.email,
             };
 
-            console.log(manager);
-
             const events = response.data.events.map(event => ({
                 id: event.id,
                 address: event.address,

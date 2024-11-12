@@ -1,13 +1,15 @@
 <script setup lang="ts">
 import { useField, useForm } from 'vee-validate'
 import { useStore } from 'vuex';
+import { useRouter } from 'vue-router'
 
 const store = useStore()
+const router = useRouter()
 
 const { handleSubmit, handleReset } = useForm({
     validationSchema: {
         email (value) {
-            if (/^[a-z.-]+@[a-z.-]+\.[a-z]+$/i.test(value)) return true
+            if (/^[a-zA-Z0-9.-]+@[a-z.-]+\.[a-z]+$/i.test(value)) return true
 
             return 'Must be a valid e-mail.'
         },
@@ -26,6 +28,16 @@ const submit = handleSubmit(values => {
     store.dispatch('login/login', {
         username: values.email,
         password: values.password,
+    }).then(() => {
+        const user = store.getters['login/user']
+        if (user.roles.includes('ROLE_ADMIN') || user.roles.includes('ROLE_MANAGER')) {
+            router.push({
+                name: 'organizer'
+            })
+        } else {
+            localStorage.clear()
+            handleReset()
+        }
     })
 })
 </script>

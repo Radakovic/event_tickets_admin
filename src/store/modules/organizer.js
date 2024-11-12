@@ -16,7 +16,11 @@ const mutations = {
 const actions = {
     async fetchOrganizers({ commit }) {
         try {
-            const response = await axios.get('/organizers');
+            const response = await axios.get('/organizers', {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`
+                }
+            });
             const organizers = response.data.member.map(item => ({
                 id: item.id,
                 address: item.address,
