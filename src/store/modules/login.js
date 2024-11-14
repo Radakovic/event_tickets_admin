@@ -2,17 +2,16 @@ import axios from 'axios';
 import {jwtDecode} from "jwt-decode";
 
 const state = {
-    //token: localStorage.getItem('token') || '',
     user: {},
+    isAdmin: false,
+    isManager: false,
+    isAuthenticated: false,
 };
 
 const mutations = {
-    // SET_TOKEN(state, token) {
-    //     localStorage.setItem('token', token);
-    // },
     SET_USER(state, user) {
         state.user = user;
-    }
+    },
 };
 
 const actions = {
@@ -23,12 +22,7 @@ const actions = {
             const token = response.data.token
 
             localStorage.setItem('token', token);
-            localStorage.setItem('userId', jwtDecode(token).user.id);
-            localStorage.setItem('userFirstName', jwtDecode(token).user.firstName);
-            localStorage.setItem('userLastName', jwtDecode(token).user.lastName);
-            localStorage.setItem('userEmail', jwtDecode(token).user.email);
-
-
+            localStorage.setItem('isAuthenticated', JSON.stringify(true));
 
             const user = {
                 id: jwtDecode(token).user.id,
@@ -38,10 +32,15 @@ const actions = {
                 roles: jwtDecode(token).roles
             };
 
-            //commit('SET_TOKEN', token);
             commit('SET_USER', user);
+            if (user.roles.includes('ROLE_ADMIN')) {
+                localStorage.setItem('isAdmin', true)
+                localStorage.setItem('isManager', true)
+            }
 
-            return jwtDecode(token).user
+            if (user.roles.includes('ROLE_MANAGER')) {
+                localStorage.setItem('isManager', true)
+            }
         } catch (error) {
             console.error('Error login:', error);
         }

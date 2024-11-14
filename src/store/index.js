@@ -5,6 +5,7 @@ import eventDetails from '@/store/modules/eventDetails';
 import organizerDetails from "@/store/modules/organizerDetails";
 import organizerCreate from "@/store/modules/organizerCreate";
 import login from "@/store/modules/login";
+import logout from "@/store/modules/logout"
 
 export default createStore({
     modules: {
@@ -13,6 +14,7 @@ export default createStore({
         eventDetails,
         organizerDetails,
         organizerCreate,
-        login
+        login,
+        logout,
     },
 });

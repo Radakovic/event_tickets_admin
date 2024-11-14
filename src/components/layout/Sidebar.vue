@@ -1,7 +1,3 @@
-<script setup>
-
-</script>
-
 <template>
   <v-navigation-drawer>
     <v-list>
@@ -16,7 +12,3 @@
     </v-list>
   </v-navigation-drawer>
 </template>
-
-<style scoped lang="sass">
-
-</style>

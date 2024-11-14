@@ -29,13 +29,23 @@ const submit = handleSubmit(values => {
         username: values.email,
         password: values.password,
     }).then(() => {
-        const user = store.getters['login/user']
-        if (user.roles.includes('ROLE_ADMIN') || user.roles.includes('ROLE_MANAGER')) {
+        // const user = store.getters['login/user']
+        // if (user.roles.includes('ROLE_ADMIN') || user.roles.includes('ROLE_MANAGER')) {
+        //     console.log('LocalStorage: ', localStorage)
+        //     console.log('Store: ', store)
+        //     router.push({
+        //         name: 'organizer'
+        //     })
+        // } else {
+        //     store.dispatch('logout/logout')
+        //     handleReset()
+        // }
+        if (JSON.parse(localStorage.isManager) === true) {
             router.push({
                 name: 'organizer'
             })
         } else {
-            localStorage.clear()
+            store.dispatch('logout/logout')
             handleReset()
         }
     })

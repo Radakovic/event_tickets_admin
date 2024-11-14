@@ -15,11 +15,15 @@ const mutations = {
     },
     STOP_LOADER(state) {
         state.loader = false;
+    },
+    START_LOADER(state) {
+        state.loader = true;
     }
 };
 
 const actions = {
     async fetchEvents({ commit }, url) {
+        commit('START_LOADER');
         try {
             const response = await axios.get(url);
             const events = response.data.member.map(item => ({
